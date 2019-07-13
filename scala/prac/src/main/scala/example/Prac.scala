@@ -10,4 +10,9 @@ object Prac extends App {
     println(x) // 2
     val x2: Int = 1 + 1 // notice type Int
     println(x2)  // 2
+    // x = 3 // compile error!
+
+    var y = 1 + 1 // `var` => mutable value definition
+    y = 3
+    println(y * y) // 9
 }

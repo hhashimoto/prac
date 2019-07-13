@@ -26,9 +26,22 @@ object Prac extends App {
 
     /* Functions */
     val succ = (x: Int) => x + 1
-    println(succ(1))
+    println(succ(1)) // 2
     val add = (x: Int, y: Int) => x + y
-    println(add(2, 3))
+    println(add(2, 3)) // 5
     val sayHello = () => println("Hello")
-    sayHello()
+    sayHello() // Hello
+
+    /* Methods */
+    def add2(x: Int, y: Int): Int = x + y
+    println(add2(2, 3)) // 5
+    def addThenMultiply(x: Int, y: Int)(multiplier: Int): Int = (x + y) * multiplier
+    println(addThenMultiply(1, 2)(3)) // 9
+    def home: String = System.getProperty("HOME")
+    println("home = "+home)
+    def getSquareString(input: Double): String = {
+        val square = input * input
+        square.toString
+    }
+    println(getSquareString(4.5)) // 20.25
 }

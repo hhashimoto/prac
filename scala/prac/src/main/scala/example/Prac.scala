@@ -23,4 +23,12 @@ object Prac extends App {
         val x = 10
         x * 2
     }) // 20
+
+    /* Functions */
+    val succ = (x: Int) => x + 1
+    println(succ(1))
+    val add = (x: Int, y: Int) => x + y
+    println(add(2, 3))
+    val sayHello = () => println("Hello")
+    sayHello()
 }

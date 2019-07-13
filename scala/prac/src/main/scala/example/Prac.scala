@@ -44,4 +44,28 @@ object Prac extends App {
         square.toString
     }
     println(getSquareString(4.5)) // 20.25
+
+    /* Classes */
+    class Greeter(prefix: String, suffix: String) {
+        def greet(name: String): Unit =
+            println(prefix + name + suffix)
+    }
+    val usa = new Greeter("Hello, ", "!")
+    usa.greet("Scala developer") // Hello, Scala developer!
+
+    /* Case Class */
+    case class Point(x: Int, y: Int) // => Immutable, Comparable
+    val point = Point(1, 2)
+    val point2 = Point(1, 2)
+    val point3 = Point(3, 2)
+    if (point == point2) {
+        println(point + " and " + point2 + " are the same.")
+    } else {
+        println(point + " and " + point2 + " are different.")
+    } // Point(1, 2) and Point(1, 2) are the same.
+    if (point == point3) {
+        println(point + " and " + point3 + " are the same.")
+    } else {
+        println(point + " and " + point3 + " are different.")
+    } // Point(1, 2) and Point(3, 2) are different.
 }

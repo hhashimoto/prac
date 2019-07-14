@@ -374,4 +374,76 @@ object Prac extends App {
     println(message2.sender)
     println(message2.receipient)
     println(message2.body)
+
+    /* Pattern Matching */
+    import scala.util.Random
+
+    val r: Int = Random.nextInt(10)
+    val v1 = r match {
+        case 0 => "zero"
+        case 1 => "one"
+        case 2 => "two"
+        case _ => "other"
+    }
+    println(v1)
+
+    def matchTest(x: Int): String = x match {
+        case 1 => "one"
+        case 2 => "two"
+        case _ => "other"
+    }
+    println(matchTest(3)) // other
+    println(matchTest(1)) // one
+
+    // matching on case classes
+    abstract class Notification
+    case class Email(sender: String, title: String, body: String) extends Notification
+    case class SMS(caller: String, message: String) extends Notification
+    case class VoiceRecording(contactName: String, link: String) extends Notification
+
+    def showNotification(notification: Notification): String = {
+        notification match {
+            case Email(sender, title, _) =>
+                s"You got an email from $sender with title: $title"
+            case SMS(number, message) =>
+                s"You got an SMS from $number! Message: $message"
+            case VoiceRecording(name, link) =>
+                s"you received a Voice Recoridng from $name! Click the link hear it: $link"
+        }
+    }
+    val someSms = SMS("12345", "Are you there?")
+    val someVoiceRecording = VoiceRecording("Tom", "voicerecoridng.org")
+    println(showNotification(someSms)) // You got an SMS from 12345! Message: Are you there?
+    println(showNotification(someVoiceRecording)) // you received a Voice Recoridng from Tom! Click the link hear it: voicerecoridng.org
+
+    def showImportantNotification(notification: Notification, importantPeopleInfo: Seq[String]): String = {
+        notification match {
+            case Email(sender, _, _) if importantPeopleInfo.contains(sender) =>
+                "You got an email from special someone!"
+            case SMS(number, _) if importantPeopleInfo.contains(number) =>
+                "You got an SMS from special someone!"
+            case other =>
+                showNotification(other)
+        }
+    }
+    val importantPeopleInfo = Seq("867-5309", "jenny@gmail.com")
+    val importantEmail = Email("jenny@gmail.com", "Hello", "Hello,Hello")
+    val importantSms = SMS("867-5309", "hogepiyo")
+    println(showImportantNotification(someSms, importantPeopleInfo)) // You got an SMS from 12345! Message: Are you there?
+    println(showImportantNotification(someVoiceRecording, importantPeopleInfo)) // you received a Voice Recoridng from Tom! Click the link hear it: voicerecoridng.org
+    println(showImportantNotification(importantEmail, importantPeopleInfo)) // You got an email from special someone!
+    println(showImportantNotification(importantSms, importantPeopleInfo)) // You got an SMS from special someone!
+
+    // Matching on type only
+    abstract class Device
+    case class Phone(model: String) extends Device {
+        def screenOff = "Turning screen off"
+    }
+    case class Computer(model: String) extends Device {
+        def screenSaverOn = "Turning screen saver on..."
+    }
+    def goIdle(device: Device) = device match {
+        case p: Phone => p.screenOff
+        case c: Computer => c.screenSaverOn
+    }
 }

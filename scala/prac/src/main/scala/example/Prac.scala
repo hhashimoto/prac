@@ -365,4 +365,13 @@ object Prac extends App {
     val cubes = numberFunc((xs, x) => xs :+ x*x*x)
     print(cubes)
     println()
+
+    /* Case Classes */
+    case class Message(sender: String, receipient: String, body: String)
+    val message1 = Message("src@example.com", "dest@example.com", "message body")
+    val message2 = message1.copy(sender = message1.receipient, receipient = message1.sender)
+    println(message1.sender)
+    println(message2.sender)
+    println(message2.receipient)
+    println(message2.body)
 }

@@ -550,4 +550,21 @@ object Prac extends App {
         case (i, j) =>
             println(s"($i, $j) ") // (1, 9) (2, 8) (3, 7)...
     }
+
+    /* Generic Classes */
+    class Stack[A] {
+        private var elements: List[A] = Nil
+        def push(x: A) { elements = x :: elements }
+        def peek: A = elements.head
+        def pop(): A = {
+            var top = peek
+            elements = elements.tail
+            top
+        }
+    }
+    val stack = new Stack[Int]
+    stack.push(1)
+    stack.push(2)
+    println(stack.pop) // 2
+    println(stack.pop) // 1
 }

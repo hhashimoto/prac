@@ -446,4 +446,46 @@ object Prac extends App {
         case p: Phone => p.screenOff
         case c: Computer => c.screenSaverOn
     }
+
+    /* Singleton Objects */
+    import logging.Logger.info
+    class Project(name: String, daysToComplete: Int)
+    class Test {
+        val project1 = new Project("TPS Reports", 1)
+        val project2 = new Project("Website redesign", 5)
+        info("Created projects")
+    }
+    val t = new Test // INFO: Created projects
+
+    // Companion objects
+    import scala.math._
+    case class Circle(radius: Double) {
+        import Circle._
+        def area: Double = calculateArea(radius)
+    }
+    object Circle {
+        private def calculateArea(radius: Double): Double = Pi * pow(radius, 2.0)
+    }
+    val circle1 = new Circle(5.0)
+    println(circle1.area)
+
+    class Email2(val username: String, val domainName: String)
+
+    object Email2 {
+        def fromString(emailString: String): Option[Email2] = {
+            emailString.split('@') match {
+                case Array(a, b) => Some(new Email2(a, b))
+                case _ => None
+            }
+        }
+    }
+    val scalaCenterEmail = Email2.fromString("scala.center@epfl.ch")
+    scalaCenterEmail match {
+        case Some(email) => println(
+            s"""Registered an email
+                |Username: ${email.username}
+                |Domain name: ${email.domainName}
+            """)
+        case None => println("Error: could not parse email")
+    }
 }

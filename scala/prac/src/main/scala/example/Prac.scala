@@ -98,4 +98,31 @@ object Prac extends App {
     greeter.greet("Scala developer") // Hello, Scala developer!
     val customGreeter = new CustomizableGreeter("How are you, ", "?")
     customGreeter.greet("Scala developer") // How are you, Scala developer?
+
+    /* Unified Types */
+
+    /*
+    Any <- AnyRef(= java.lang.Object)
+     ^
+     |
+    AnyVal <- Int, Double, Boolean, Char, String, Unit, ...
+    */
+    val list: List[Any] = List(
+        "a string",
+        732, // an integer
+        'c', // a character
+        true, // a boolean value
+        () => "an anonymous function return a string"
+    )
+    list.foreach(e => println(e))
+
+    // type casting
+    val a: Long = 987654321
+    val b: Float = a
+    val face: Char = '☺'
+    val number: Int = face
+    println(a) // 987654321
+    println(b) // 9.8765434E8
+    println(face)
+    println(number) // 9786
 }

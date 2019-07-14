@@ -289,4 +289,51 @@ object Prac extends App {
     val rsi = new RichStringIterator("Hello")
 //    rsi.foreach(c => println(c))
     rsi foreach println // = rsi.foreach(c => println(c))
+
+    /* Higer-order Functions */
+    val sararies = Seq(20000, 70000, 40000)
+    val doubleSarary = (x: Int) => x * 2
+    val newSararies = sararies.map(doubleSarary)
+    println(newSararies) // List(40000, 140000, 80000)
+    val newSararies3 = sararies.map(x => x * 3) // List(60000, 210000, 120000)
+    println(newSararies3)
+    val newSararies4 = sararies.map(_ * 4) // List(80000, 280000, 160000)
+    println(newSararies4)
+
+    case class WeeklyWeatherForecast(temperatures: Seq[Double]) {
+        private def convertCtoF(temp: Double) = temp * 1.8 + 32
+        def forecastInFahrenheit: Seq[Double] = temperatures.map(convertCtoF)
+    }
+    val wwf = WeeklyWeatherForecast(Seq(24.5, 27, 30.5, 31.5))
+    wwf.forecastInFahrenheit.map(println)
+
+    object SalaryRaiser {
+        private def promotion(salaries: List[Double], promotionFunction: Double => Double): List[Double] =
+            salaries.map(promotionFunction)
+
+        def smallPromotion(salaries: List[Double]): List[Double] =
+            promotion(salaries, salary => salary * 1.1)
+
+        def bigPromotion(salaries: List[Double]): List[Double] =
+            promotion(salaries, salary => salary * math.log(salary))
+
+        def hugePromotion(salaries: List[Double]): List[Double] =
+            promotion(salaries, salary => salary * salary)
+    }
+    val salaries: List[Double] = List(10000, 30000, 50000)
+    SalaryRaiser.smallPromotion(salaries).map(println)
+    SalaryRaiser.bigPromotion(salaries).map(println)
+    SalaryRaiser.hugePromotion(salaries).map(println)
+
+    // Functions that return functions
+    def urlBuilder(ssl: Boolean, domainName: String): (String, String) => String = {
+        val schema = if (ssl) "https://" else "http://"
+        (endpoint: String, query: String) => s"$schema$domainName/$endpoint?$query" 
+    }
+    val domainName = "www.example.com"
+    def getURL = urlBuilder(ssl=true, domainName)
+    val endpoint = "users"
+    val query = "id=1"
+    val url = getURL(endpoint, query)
+    println(url) // https://www.example.com/users?id=1
 }

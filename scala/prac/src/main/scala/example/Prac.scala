@@ -68,4 +68,17 @@ object Prac extends App {
     } else {
         println(point + " and " + point3 + " are different.")
     } // Point(1, 2) and Point(3, 2) are different.
+
+    /* Objects */
+    object IdFactory { // similar singleton class instance
+        private var counter = 0
+        def create(): Int = {
+            counter += 1
+            counter
+        }
+    }
+    var id1: Int = IdFactory.create()
+    println(id1) // 1
+    var id2: Int = IdFactory.create()
+    println(id2) // 2
 }

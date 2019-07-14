@@ -532,4 +532,22 @@ object Prac extends App {
     val CustomerID(cname2) = "--asbdyaruteyd"
 //    val CustomerID(cname3) = "-asbdyeryu" // scala.MatchError
     println(cname2) //
+
+    /* For Comprehensions */
+    case class User2(name: String, age: Int)
+    val userBase = List(User2("Travis", 28), User2("Kelly", 33), User2("Jennifer", 44), User2("Dennis", 23))
+    val twentySomethings = for (user <- userBase if (user.age >= 20 && user.age < 30))
+        yield user.name
+
+    twentySomethings.foreach(println) // Travis Dennis
+
+    def foo(n: Int, v: Int) =
+        for (i <- 0 until n;
+             j <- 0 until n if i + j == v)
+            yield (i, j)
+
+    foo(10, 10) foreach {
+        case (i, j) =>
+            println(s"($i, $j) ") // (1, 9) (2, 8) (3, 7)...
+    }
 }

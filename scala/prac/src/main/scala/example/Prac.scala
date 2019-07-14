@@ -186,4 +186,45 @@ object Prac extends App {
     println(h.a) // 1
     println(h.b) // 2
     //println(h.c) // compile error
+
+    /* Traits */
+
+    // minimal
+    trait HairColor
+
+    // generic
+    trait Iterator[A] {
+        def hasNext: Boolean
+        def next(): A
+    }
+
+    class IntIterator(to: Int) extends Iterator[Int] {
+        private var current = 0
+        override def hasNext: Boolean = current < to
+        override def next(): Int = {
+            if (hasNext) {
+                val t = current
+                current += 1
+                t
+            } else 0
+        }
+    }
+
+    val it = new IntIterator(10)
+    println(it.next()) // 0
+    println(it.next()) // 1
+
+    // subtyping
+    import scala.collection.mutable.ArrayBuffer
+    trait Pet {
+        val name: String
+    }
+    class Cat(val name: String) extends Pet
+    class Dog(val name: String) extends Pet
+    val dog = new Dog("Harry")
+    val cat = new Cat("Sarry")
+    val animals = ArrayBuffer.empty[Pet]
+    animals.append(dog)
+    animals.append(cat)
+    animals.foreach(pet => println(pet.name))
 }

@@ -510,4 +510,26 @@ object Prac extends App {
             |width: 100%;""".stripMargin
     for (patternMatch <- keyValPattern.findAllMatchIn(input))
         println(s"key: ${patternMatch.group(1)} value: ${patternMatch.group(2)}")
+    
+    /* Extractor Objects */
+    object CustomerID {
+        def apply(name: String) = s"$name--${Random.nextLong}"
+
+        def unapply(customerID: String): Option[String] = {
+            val stringArray: Array[String] = customerID.split("--")
+            if (stringArray.tail.nonEmpty) Some(stringArray.head) else None
+        }
+    }
+    val customer1ID = CustomerID("HogeFuga")
+    println(customer1ID) // HogeFuga---976794760280160152
+    customer1ID match {
+        case CustomerID(name) => println(name)
+        case _ => println("Could not extracta CustomerID")
+    } // HogeFuga
+    val customer2ID = CustomerID("Nico")
+    val CustomerID(cname) = customer2ID
+    println(cname) // Nico
+    val CustomerID(cname2) = "--asbdyaruteyd"
+//    val CustomerID(cname3) = "-asbdyeryu" // scala.MatchError
+    println(cname2) //
 }

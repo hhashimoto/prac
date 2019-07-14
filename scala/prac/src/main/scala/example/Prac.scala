@@ -346,4 +346,23 @@ object Prac extends App {
         fact(x, 1)
     }
     println("factorial of 5: " + factorial(5))
+
+    /* Multiple Parameter Lists(Currying) */
+
+    val numbers = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    val res = numbers.foldLeft(0)((acc,n) => acc + n)
+    println(res) // 55
+    val res2 = numbers.foldLeft(0)((m: Int, n: Int) => m + n)
+    val res3 = numbers.foldLeft(0)(_ + _)
+    println(res2) // 55
+    println(res3) // 55
+
+    // Partial application
+    val numberFunc = numbers.foldLeft(List[Int]()) _
+    val squares = numberFunc((xs, x) => xs :+ x*x)
+    print(squares)
+    println()
+    val cubes = numberFunc((xs, x) => xs :+ x*x*x)
+    print(cubes)
+    println()
 }

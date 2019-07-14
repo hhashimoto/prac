@@ -125,4 +125,65 @@ object Prac extends App {
     println(b) // 9.8765434E8
     println(face)
     println(number) // 9786
+
+    /* Classes */
+
+    // minimal class definition
+    class User
+    val user1 = new User
+
+    // class definition
+    class PointEx(var x: Int, var y: Int) {
+        def move(dx: Int, dy: Int): Unit = {
+            x += dx
+            y += dy
+        }
+
+        override def toString: String =
+            s"($x, $y)"
+    }
+    val point1 = new PointEx(2, 3)
+    println(point1.x) // 2
+    println(point1) // (2, 3)
+
+    // constuctors
+    class PointEx2(var x: Int = 0, var y: Int = 0)
+    val origin = new PointEx2
+    val pp1 = new PointEx2(1)
+    val pp2 = new PointEx2(y=10)
+    println(origin.x) // 0
+    println(pp1.x) // 1
+    println(pp2.y) // 10
+
+    // Private Members and Getter/Setter Syntax
+    class PointEx3 {
+        private var _x = 0
+        private var _y = 0
+        private val bound = 100
+
+        def x = _x
+        def x_= (newX: Int): Unit = {
+            if (newX < bound) _x = newX else printWarning
+        }
+
+        def y = _y
+        def y_= (newY: Int): Unit = {
+            if (newY < bound) _y = newY else printWarning
+        }
+
+        private def printWarning = println("WARNING: Out of bounds")
+    }
+
+    val pp5 = new PointEx3
+    pp5.x = 99
+    pp5.y = 101 // WARNING: Out of bounds
+    println(pp5.x) // 99
+    println(pp5.y) // 0
+
+    // var/val is public, without var/val is private
+    class Hoge(var a: Int = 1, val b: Int = 2, c: Int = 3)
+    val h = new Hoge
+    println(h.a) // 1
+    println(h.b) // 2
+    //println(h.c) // compile error
 }

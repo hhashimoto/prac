@@ -251,4 +251,42 @@ object Prac extends App {
     for ((a, b) <- numPairs) {
         println(a * b)
     }
+
+    /* Class Composition with Mixins */
+    abstract class A {
+        val message: String
+    }
+    class B extends A {
+        val message = "I'm an instance of class B"
+    }
+    trait C extends A {
+        def loudMessage = message.toUpperCase()
+    }
+    class D extends B with C
+    val d = new D
+    println(d.message) // I'm an instance of class B
+    println(d.loudMessage) // I'M AN INSTANCE OF CLASS B
+
+    abstract class AbsIterator {
+        type T
+        def hasNext: Boolean
+        def next(): T
+    }
+    class StringIterator(s: String) extends AbsIterator {
+        type T = Char
+        private var i = 0
+        def hasNext = i < s.length
+        def next() = {
+            var ch = s charAt i
+            i += 1
+            ch
+        }
+    }
+    trait RichIterator extends AbsIterator {
+        def foreach(f: T => Unit): Unit = while (hasNext) f(next())
+    }
+    class RichStringIterator(s: String) extends StringIterator(s) with RichIterator
+    val rsi = new RichStringIterator("Hello")
+//    rsi.foreach(c => println(c))
+    rsi foreach println // = rsi.foreach(c => println(c))
 }

@@ -336,4 +336,14 @@ object Prac extends App {
     val query = "id=1"
     val url = getURL(endpoint, query)
     println(url) // https://www.example.com/users?id=1
+
+    /* Nested Methods */
+    def factorial(x: Int): Int = {
+        def fact(x: Int, acc: Int): Int = {
+            if (x <= 1) acc
+            else fact(x - 1, x * acc)
+        }
+        fact(x, 1)
+    }
+    println("factorial of 5: " + factorial(5))
 }

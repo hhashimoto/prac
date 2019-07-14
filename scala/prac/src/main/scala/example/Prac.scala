@@ -81,4 +81,21 @@ object Prac extends App {
     println(id1) // 1
     var id2: Int = IdFactory.create()
     println(id2) // 2
+
+    /* Traits */
+    trait TGreeter {
+        def greet(name: String): Unit =
+            println("Hello, " + name + "!")
+    }
+    class DefaultGreeter extends TGreeter
+
+    class CustomizableGreeter(prefix: String, postfix: String) extends TGreeter {
+        override def greet(name: String): Unit =
+            println(prefix + name + postfix)
+    }
+
+    val greeter = new DefaultGreeter()
+    greeter.greet("Scala developer") // Hello, Scala developer!
+    val customGreeter = new CustomizableGreeter("How are you, ", "?")
+    customGreeter.greet("Scala developer") // How are you, Scala developer?
 }

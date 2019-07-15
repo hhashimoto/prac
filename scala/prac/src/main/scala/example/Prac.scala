@@ -567,4 +567,27 @@ object Prac extends App {
     stack.push(2)
     println(stack.pop) // 2
     println(stack.pop) // 1
+
+    /* Upper Type Bounds */
+    abstract class Animal {
+        def name: String
+    }
+    abstract class Pet2 extends Animal
+
+    class Cat2 extends Pet2 {
+        override def name: String = "Cat"
+    }
+    class Dog2 extends Pet2 {
+        override def name: String = "Dog"
+    }
+    class Lion extends Animal {
+        override def name: String = "Lion"
+    }
+    class PetContainer[P <: Pet2](p: P) { // P must extends Pet2
+        def pet: P = p
+    }
+    val dogContainer = new PetContainer[Dog2](new Dog2)
+    val catContainer = new PetContainer[Cat2](new Cat2)
+//    val lionContainer = new PetContainer[Lion](new Lion) // compile error
+    val hogeContainer = new PetContainer[Pet2](new Dog2)
 }

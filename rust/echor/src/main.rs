@@ -1,3 +1,3 @@
 fn main() {
-    println!(std::env::args());
+    println!("{}", std::env::args());
 }

@@ -21,5 +21,10 @@ fn main() {
         )
         .get_matches();
 
-    println!("{:#?}", matches);
+    let text = matches.values_of_lossy("text").unwrap();
+    let omit_newline = matches.is_present("omit_newline");
+    // if式はelse節が無い場合、ユニット型を返す。そのため、if単独では値を返すことができない。
+    let e = if omit_newline { "" }; // ビルドエラー
+
+    print!("{}{}", text.join(" "), e);
 }

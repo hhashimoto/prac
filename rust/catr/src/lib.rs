@@ -16,16 +16,19 @@ pub fn get_args() -> MyResult<Config> {
         .author("hhashimoto <almite.bridge@gmail.com")
         .about("Rust cat")
         .arg(
-            Arg::with_name("number_lines")
+            Arg::with_name("number")
                 .short("n")
+                .long("number")
                 .help("Number lines")
                 .takes_value(false),
         )
         .arg(
-            Arg::with_name("number_nonblank_lines")
+            Arg::with_name("number-nonblank")
                 .short("b")
+                .long("number-nonblank")
                 .help("Number nonblank lines")
-                .takes_value(false),
+                .takes_value(false)
+                .conflicts_with("number"),
         )
         .arg(
             Arg::with_name("files")
@@ -36,10 +39,13 @@ pub fn get_args() -> MyResult<Config> {
         )
         .get_matches();
 
+    let number_lines = matches.is_present("number");
+    let number_nonblank_lines = matches.is_present("number-nonblank");
+
     Ok(Config {
         files: matches.values_of_lossy("files").unwrap(),
-        number_lines: matches.is_present("number_lines"),
-        number_nonblank_lines: matches.is_present("number_nonblank_lines"),
+        number_lines: number_lines,
+        number_nonblank_lines: number_nonblank_lines,
     })
 }
 

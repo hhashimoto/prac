@@ -54,8 +54,16 @@ pub fn get_args() -> MyResult<Config> {
 pub fn run(config: Config) -> MyResult<()> {
     for filename in config.files {
         match open(&filename) {
-            Err(err) => eprintln!("Failet to open {}: {}", filename, err),
-            Ok(_) => println!("Opened {}", filename),
+            Err(err) => eprintln!("Failed to open {}: {}", filename, err),
+            Ok(buf) => {
+              for line in buf.lines().enumerate() {
+                // tupleの分解のためではあるが、これでいいのか……？
+                match line.1 {
+                  Err(err) => eprintln!("Failed to read {}: {}", filename, err),
+                  Ok(s) => println!("{}", s),
+                }
+              }
+            },
         }
     }
     Ok(())

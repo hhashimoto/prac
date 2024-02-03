@@ -56,14 +56,29 @@ pub fn run(config: Config) -> MyResult<()> {
         match open(&filename) {
             Err(err) => eprintln!("Failed to open {}: {}", filename, err),
             Ok(buf) => {
-              for line in buf.lines().enumerate() {
-                // tupleの分解のためではあるが、これでいいのか……？
-                match line.1 {
-                  Err(err) => eprintln!("Failed to read {}: {}", filename, err),
-                  Ok(s) => println!("{}", s),
+                let mut line_number = 1;
+                for line in buf.lines().enumerate() {
+                    // tupleの分解のためではあるが、これでいいのか……？
+                    match line.1 {
+                        Err(err) => eprintln!("Failed to read {}: {}", filename, err),
+                        Ok(s) => {
+                            if config.number_lines {
+                                println!("{:6}\t{}", line_number, s);
+                                line_number += 1;
+                            } else if config.number_nonblank_lines {
+                                if s == "" {
+                                    println!("");
+                                } else {
+                                    println!("{:6}\t{}", line_number, s);
+                                    line_number += 1;
+                                }
+                            } else {
+                                println!("{}", s);
+                            }
+                        }
+                    }
                 }
-              }
-            },
+            }
         }
     }
     Ok(())

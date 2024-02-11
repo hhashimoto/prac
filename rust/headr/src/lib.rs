@@ -1,5 +1,10 @@
 use clap::{App, Arg};
-use std::{error::Error, fs::File, io::{self, BufRead, BufReader}};
+use std::{
+    borrow::Borrow,
+    error::Error,
+    fs::File,
+    io::{self, BufRead, BufReader},
+};
 
 type MyResult<T> = Result<T, Box<dyn Error>>;
 
@@ -60,19 +65,40 @@ pub fn get_args() -> MyResult<Config> {
 
 pub fn run(config: Config) -> MyResult<()> {
     for filename in config.files {
-      match open(&filename) {
-        Err(err) => eprintln!("{}: {}", filename, err),
-        Ok(_) => println!("Opened {}", filename),
-      }
+        match open(&filename) {
+            Err(err) => eprintln!("{}: {}", filename, err),
+            Ok(f) => match config.bytes {
+                None => head_lines(config.lines, f),
+                _ => head_bytes(config.bytes.unwrap(), f),
+            },
+        }
     }
     Ok(())
 }
 
+fn head_lines(n: usize, f: Box<dyn BufRead>) {
+    let mut n2 = n;
+    for row in f.lines() {
+        if n2 <= 0 {
+            return;
+        }
+        println!("{}", row.unwrap());
+        n2 -= 1;
+    }
+}
+
+fn head_bytes(n: usize, mut f: Box<dyn BufRead>) {
+    let mut buf = vec![0; n];
+    let b = f.read(&mut buf[..]);
+    let s = String::from_utf8_lossy(&buf[..b.unwrap()]);
+    print!("{}", s);
+}
+
 fn open(filename: &str) -> MyResult<Box<dyn BufRead>> {
-  match filename {
-    "-" => Ok(Box::new(BufReader::new(io::stdin()))),
-    _ => Ok(Box::new(BufReader::new(File::open(filename)?))),
-  }
+    match filename {
+        "-" => Ok(Box::new(BufReader::new(io::stdin()))),
+        _ => Ok(Box::new(BufReader::new(File::open(filename)?))),
+    }
 }
 
 fn parse_positive_int(val: &str) -> MyResult<usize> {

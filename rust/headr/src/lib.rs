@@ -40,58 +40,50 @@ pub fn get_args() -> MyResult<Config> {
         )
         .get_matches();
 
-    let fs = matches.values_of_lossy("files").unwrap();
-    let l = matches.value_of("lines").unwrap_or_default();
-    let b = matches.value_of("bytes").unwrap_or_default();
-    let lines = match parse_positive_int(l) {
-      Ok(n) => n,
-      Err(e) => {
-        eprintln!("illegal line count -- {}", e);
-        std::process::exit(1);
-      },
-    };
-    let bytes = match parse_positive_int(b) {
-      Ok(n) => Some(n),
-      Err(e) if b != "" => {
-        eprintln!("illegal byte count -- {}", e);
-        std::process::exit(1);
-      },
-      _ => None,
-    };
+    let lines = matches
+        .value_of("lines")
+        .map(parse_positive_int)
+        .transpose()
+        .map_err(|e| format!("illegal line count -- {}", e))?;
+    let bytes = matches
+        .value_of("bytes")
+        .map(parse_positive_int)
+        .transpose()
+        .map_err(|e| format!("illegal byte count -- {}", e))?;
 
     Ok(Config {
-        files: fs,
-        lines: lines,
-        bytes: bytes,
+        files: matches.values_of_lossy("files").unwrap(),
+        lines: lines.unwrap(),
+        bytes,
     })
 }
 
 pub fn run(config: Config) -> MyResult<()> {
-  println!("{:#?}", config);
-  Ok(())
+    println!("{:#?}", config);
+    Ok(())
 }
 
 fn parse_positive_int(val: &str) -> MyResult<usize> {
-  match val.parse() {
-    Ok(n) if n > 0 => Ok(n),
-    _ => Err(From::from(val)),
-  }
+    match val.parse() {
+        Ok(n) if n > 0 => Ok(n),
+        _ => Err(From::from(val)),
+    }
 }
 
 #[test]
 fn test_parse_positive_int() {
-  // 3は整数のため、OK
-  let res = parse_positive_int("3");
-  assert!(res.is_ok());
-  assert_eq!(res.unwrap(), 3);
+    // 3は整数のため、OK
+    let res = parse_positive_int("3");
+    assert!(res.is_ok());
+    assert_eq!(res.unwrap(), 3);
 
-  // 数値以外の文字列はエラー
-  let res = parse_positive_int("foo");
-  assert!(res.is_err());
-  assert_eq!(res.unwrap_err().to_string(), "foo".to_string());
+    // 数値以外の文字列はエラー
+    let res = parse_positive_int("foo");
+    assert!(res.is_err());
+    assert_eq!(res.unwrap_err().to_string(), "foo".to_string());
 
-  // 0の場合はpositiveでないためエラー
-  let res = parse_positive_int("0");
-  assert!(res.is_err());
-  assert_eq!(res.unwrap_err().to_string(), "0".to_string());
+    // 0の場合はpositiveでないためエラー
+    let res = parse_positive_int("0");
+    assert!(res.is_err());
+    assert_eq!(res.unwrap_err().to_string(), "0".to_string());
 }

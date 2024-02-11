@@ -77,7 +77,7 @@ pub fn run(config: Config) -> MyResult<()> {
             },
         }
         counter -= 1;
-        if counter > 0 || (l > 1 && config.bytes.is_none()) {
+        if counter > 0 {
             println!();
         }
     }

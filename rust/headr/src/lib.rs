@@ -64,13 +64,22 @@ pub fn get_args() -> MyResult<Config> {
 }
 
 pub fn run(config: Config) -> MyResult<()> {
+    let l = config.files.len();
+    let mut counter = l;
     for filename in config.files {
+        if l > 1 {
+            println!("==> {} <==", filename);
+        }
         match open(&filename) {
             Err(err) => eprintln!("{}: {}", filename, err),
             Ok(f) => match config.bytes {
                 None => head_lines(config.lines, f),
                 _ => head_bytes(config.bytes.unwrap(), f),
             },
+        }
+        counter -= 1;
+        if counter > 0 {
+            println!();
         }
     }
     Ok(())

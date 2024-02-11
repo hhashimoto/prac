@@ -1,9 +1,8 @@
 use clap::{App, Arg};
 use std::{
-    borrow::Borrow,
     error::Error,
     fs::File,
-    io::{self, BufRead, BufReader},
+    io::{self, BufRead, BufReader, Read},
 };
 
 type MyResult<T> = Result<T, Box<dyn Error>>;
@@ -78,20 +77,21 @@ pub fn run(config: Config) -> MyResult<()> {
             },
         }
         counter -= 1;
-        if counter > 0 {
+        if counter > 0 || (l > 1 && config.bytes.is_none()) {
             println!();
         }
     }
     Ok(())
 }
 
-fn head_lines(n: usize, f: Box<dyn BufRead>) {
+fn head_lines(n: usize, mut f: Box<dyn BufRead>) {
     let mut n2 = n;
-    for row in f.lines() {
-        if n2 <= 0 {
-            return;
-        }
-        println!("{}", row.unwrap());
+    let mut buf: Vec<u8> = vec![];
+    while n2 > 0 {
+        let s = f.read_until(b'\n', &mut buf).unwrap();
+        let b2 = &buf[..s];
+        print!("{}", String::from_utf8_lossy(b2));
+        buf.clear();
         n2 -= 1;
     }
 }
